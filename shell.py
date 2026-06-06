@@ -3,6 +3,7 @@ import os
 import psutil
 import time
 from plyer import notification
+import shutil
 
 os.chdir(os.path.expanduser('~'))
 history = []
@@ -20,6 +21,10 @@ help = {
    "sysinfo":"Show percentage for 1.CPU, 2.RAM, 3.Battery",
    "codehere":"Open vs code in current dir",
    "timer [total_seconds]": "The shel paused for x seconds and show the timer countdown",
+   "copy [src] [dst]": "Copy and paste a file",
+   "move [src] [dst]": "Move a file or folder to destination",
+   "processes": "Show current processes",
+   "kill_process [pid]": "Kills a process based to pid",
    "Other Built In Windows Commands":"You can call built-in windows commands",
    "exit/quit":"Close the shell"
 }
@@ -96,6 +101,18 @@ def analyze_command(command:str):
    elif "codehere" in command:
       history.append(command)
       os.system("code .")
+   elif "copy" in command:
+      command = command.split()
+      shutil.copy(command[1],command[2])
+   elif "move" in command:
+      command = command.split()
+      shutil.move(command[1],command[2])
+   elif "processes" == command:
+      for p in psutil.process_iter():
+        print(p.pid, p.name())
+   elif "kill_process" in command:
+      pid = command[1]
+      psutil.Process(pid).kill()
    elif "help" == command:
       history.append(command)
       for i in help:
