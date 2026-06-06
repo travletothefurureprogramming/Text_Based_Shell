@@ -110,10 +110,28 @@ def analyze_command(command:str):
       os.system(command)
      except:
         print("Uknown Command")
-   
 
+def get_git_branch():
+    try:
+        result = subprocess.run(
+            ["git", "branch", "--show-current"], 
+            stdout=subprocess.PIPE,  
+            stderr=subprocess.DEVNULL, 
+            text=True                 
+        )
+        
+        if result.stdout:
+            return result.stdout.strip()
+        
+    except:
+        return ""
+    
+    return ""
 while True:
    current_path = os.getcwd()
-   command = input(current_path+"\my-shell> ")
+   if get_git_branch() =="":
+    command = input(current_path+"\my-shell> ")
+   else:
+    command = input(current_path+f"\my-shell({get_git_branch()})> ")
    analyze_command(command)
 
