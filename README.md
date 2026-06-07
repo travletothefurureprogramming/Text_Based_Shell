@@ -6,24 +6,6 @@
 
 <img width="800" height="408" alt="ScreenRecording2026-06-07212059-ezgif com-video-to-gif-converter" src="https://github.com/user-attachments/assets/853c63e4-001a-4254-986b-548997097bdc" />
 
-
-## 🚀 Quick Start
-
-```bash
-python shell.py
-```
-
-Example:
-
-```text
-C:\Projects\CustomShell(main)> sysinfo
-
-CPU: 12%
-RAM: 48%
-Battery: 87%
-```
-
-
 ## 📦 Installation
 
 Download the latest executable from the Releases page:
