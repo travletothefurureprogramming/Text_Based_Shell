@@ -49,7 +49,7 @@ def timer(total_seconds):
 
 def analyze_command(command:str):
    
-   if "cd" in command:
+   if command.startswith("cd"):
       history.append(command)
       if command == "cd":
          os.chdir(os.path.expanduser('~'))
@@ -112,7 +112,12 @@ def analyze_command(command:str):
         print(p.pid, p.name())
    elif "kill_process" in command:
       pid = command[1]
-      psutil.Process(pid).kill()
+      psutil.Process(int(pid)).kill()
+   elif "view" in command:
+      command = command.split()
+      file = command[1]
+      with open(file) as f:
+         print(f.read())
    elif "help" == command:
       history.append(command)
       for i in help:
