@@ -70,23 +70,23 @@ def analyze_command(command:str):
    elif "cls" == command:
       history.append(command)
       os.system('cls')
-   elif "mkdir" in command:
+   elif command.startswith("mkdir"):
       history.append(command)
       command = command.split()
       os.mkdir(" ".join(command[1:]))
-   elif "rmdir" in command:
+   elif command.startswith("rmdir"):
       history.append(command)
       command = command.split()
       os.rmdir(" ".join(command[1:]))
-   elif "del" in command:
+   elif command.startswith("del"):
       history.append(command)
       command = command.split()
       os.remove(" ".join(command[1:]))
-   elif "explorer" in command:
+   elif command.startswith("explorer"):
       history.append(command)
       current_path = os.getcwd()
       subprocess.run(["explorer",current_path])
-   elif "sysinfo" in command:
+   elif "sysinfo" == command:
       history.append(command)
       cpu = psutil.cpu_percent()
       ram = psutil.virtual_memory()
@@ -98,22 +98,22 @@ def analyze_command(command:str):
        print(battery[0],"%")
       else:
          print("Battery: No battery detected (Desktop)")
-   elif "codehere" in command:
+   elif "codehere" == command:
       history.append(command)
       os.system("code .")
-   elif "copy" in command:
+   elif command.startswith("copy"):
       command = command.split()
       shutil.copy(command[1],command[2])
-   elif "move" in command:
+   elif command.startswith("move"):
       command = command.split()
       shutil.move(command[1],command[2])
    elif "processes" == command:
       for p in psutil.process_iter():
         print(p.pid, p.name())
-   elif "kill_process" in command:
+   elif command.startswith("kill_process"):
       pid = command[1]
       psutil.Process(int(pid)).kill()
-   elif "view" in command:
+   elif command.startswith("view"):
       command = command.split()
       file = command[1]
       with open(file) as f:
@@ -122,7 +122,7 @@ def analyze_command(command:str):
       history.append(command)
       for i in help:
          print(f"Command {i}. Description: {help[i]}")
-   elif "timer" in command:
+   elif command.startswith("timer"):
       command = command.split()
       timer(int(command[1]))
    elif "exit" == command or "quit" == command:
