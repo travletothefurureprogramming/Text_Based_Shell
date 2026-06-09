@@ -4,6 +4,7 @@ import psutil
 import time
 from plyer import notification
 import shutil
+import socket
 
 os.chdir(os.path.expanduser('~'))
 history = []
@@ -25,6 +26,7 @@ help = {
    "move [src] [dst]": "Move a file or folder to destination",
    "processes": "Show current processes",
    "kill_process [pid]": "Kills a process based to pid",
+   "netinfo":"It returns hostname and ip of the device",
    "Other Built In Windows Commands":"You can call built-in windows commands",
    "exit/quit":"Close the shell"
 }
@@ -45,6 +47,11 @@ def timer(total_seconds):
         message = "The timer has ended!",  
         timeout = 5 
     )
+
+def get_net_info():
+    hostname = socket.gethostname()
+    ip = socket.gethostbyname(hostname)
+    return hostname,ip
 
 
 def analyze_command(command:str):
@@ -101,6 +108,30 @@ def analyze_command(command:str):
    elif "codehere" == command:
       history.append(command)
       os.system("code .")
+   elif "netinfo" == command:
+     hostname, ip = get_net_info()
+     print(f"Hostname: {hostname}\nIP Address: {ip}")
+     
+   elif command.startswith("find"):
+      history.append(command)
+      parts = command.split()
+
+      if len(parts) < 2:
+         print("Usage: find [filename]")
+      
+      else:
+         search_name = parts[1]
+         found = False
+         print(f"Searching for '{search_name}'...")
+
+         for root, dirs, files in os.walk(os.getcwd()):
+                if search_name in files:
+                    print(f"Found at: {os.path.join(root, search_name)}")
+                    found = True
+            
+         if not found:
+                print("File not found.")
+
    elif command.startswith("copy"):
       command = command.split()
       shutil.copy(command[1],command[2])
