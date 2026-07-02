@@ -2,11 +2,11 @@
 
 > A lightweight Python-based shell for Windows developers, students, and power users, featuring Git-aware prompts, system monitoring, process management, productivity shortcuts, and desktop notifications.
 
-## 📸 Demo
+## Demo
 
 <img width="800" height="408" alt="ScreenRecording2026-06-07212059-ezgif com-video-to-gif-converter" src="https://github.com/user-attachments/assets/853c63e4-001a-4254-986b-548997097bdc" />
 
-## 📦 Installation
+## Installation
 
 Download the latest executable from the Releases page:
 
@@ -14,7 +14,7 @@ Download the latest executable from the Releases page:
 
 No Python installation required.
 
-## 🚀 Quick Start
+## Quick Start
 
 1. Download `CustomShell.exe`
 2. Double-click the executable
@@ -30,7 +30,7 @@ RAM: 52%
 Battery: 89%
 ```
 
-## ✨ Features
+## Features
 
 - **Git Integration** – Automatically detects the active Git branch and displays it in the prompt.
 - **System Monitoring** – View CPU, RAM, and battery usage instantly.
@@ -39,7 +39,18 @@ Battery: 89%
 - **Built-in Timer** – Countdown timer with native desktop notifications.
 - **Windows Command Fallback** – Unknown commands are forwarded to the native Windows shell.
 
-## 💻 Command Reference
+## Why Custom Shell?
+
+Unlike the default Windows Command Prompt, Custom Shell provides:
+
+- Git-aware prompts
+- Built-in system monitoring
+- Process management
+- Desktop notifications
+- Productivity shortcuts
+- Automatic fallback to Windows commands
+
+## Command Reference
 
 Type `help` inside the shell to see the official command listing.
 
@@ -63,14 +74,16 @@ Type `help` inside the shell to see the official command listing.
 | processes | List running processes |
 | kill_process [pid] | Terminate a process |
 | timer [seconds] | Start a countdown timer |
+| network | Show network information |
+| find [name] | Search for a specific file |
 | help | Display available commands |
 | exit / quit | Exit the shell |
 
-## 📝 Implementation Details
+## Implementation Details
 
 ### Error Handling
 
-If a command is not recognized by the shell, it is automatically forwarded to the native Windows command interpreter. If execution fails, the shell displays:
+Unknown commands are automatically executed using the Windows command interpreter (`cmd.exe`). If the command also fails there, the shell prints:
 
 ```text
 Unknown Command
@@ -86,12 +99,12 @@ Battery: No battery detected (Desktop)
 
 instead of raising an exception.
 
-## 🛠️ Dependencies
+## Dependencies
 
 - Python 3.11
 - psutil
 - plyer
 
-## 📄 License
+## License
 
 MIT License
