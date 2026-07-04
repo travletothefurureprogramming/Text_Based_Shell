@@ -4,32 +4,32 @@ import psutil
 import time
 from plyer import notification
 import shutil
-import socket
 
 os.chdir(os.path.expanduser('~'))
 history = []
 help = {
-   "cd [dir]":"Go to specific dir",
-   "cd":"Go to home dir",
-   "pwd":"Show the current dir",
-   "history":"Show the command history",
-   "dir":"Show files and folders in current dirs",
-   "cls":"Clear the terminal",
-   "mkdir [name]":"Create a new folder",
-   "rmdir [folder]":"Delete a folder",
-   "del [name]":"Delete a file",
-   "explorer":"Open the file explorer in current directory",
-   "sysinfo":"Show percentage for 1.CPU, 2.RAM, 3.Battery",
-   "codehere":"Open vs code in current dir",
-   "timer [total_seconds]": "The shel paused for x seconds and show the timer countdown",
-   "copy [src] [dst]": "Copy and paste a file",
-   "move [src] [dst]": "Move a file or folder to destination",
-   "processes": "Show current processes",
-   "kill_process [pid]": "Kills a process based to pid",
-   "netinfo":"It returns hostname and ip of the device",
-   "Other Built In Windows Commands":"You can call built-in windows commands",
-   "exit/quit":"Close the shell"
+    "help": "Show all available commands.",
+    "cd [directory]": "Change the current working directory. Without arguments, goes to the home directory.",
+    "pwd": "Print the current working directory.",
+    "dir": "List files and folders in the current directory.",
+    "cls": "Clear the terminal screen.",
+    "history": "Show previously executed commands.",
+    "mkdir <directory>": "Create a new directory.",
+    "rmdir <directory>": "Remove an empty directory.",
+    "del <file>": "Delete a file.",
+    "copy <source> <destination>": "Copy a file.",
+    "move <source> <destination>": "Move a file.",
+    "view <file>": "Display the contents of a text file.",
+    "explorer": "Open the current directory in Windows Explorer.",
+    "codehere": "Open the current directory in Visual Studio Code.",
+    "sysinfo": "Display CPU, RAM and battery usage.",
+    "processes": "List all running processes.",
+    "kill_process <pid>": "Terminate a process using its PID.",
+    "timer <seconds>": "Start a countdown timer.",
+    "exit": "Exit the shell.",
+    "quit": "Exit the shell."
 }
+
 
 def timer(total_seconds):
     while total_seconds >= 0:
@@ -47,11 +47,6 @@ def timer(total_seconds):
         message = "The timer has ended!",  
         timeout = 5 
     )
-
-def get_net_info():
-    hostname = socket.gethostname()
-    ip = socket.gethostbyname(hostname)
-    return hostname,ip
 
 
 def analyze_command(command:str):
@@ -108,30 +103,6 @@ def analyze_command(command:str):
    elif "codehere" == command:
       history.append(command)
       os.system("code .")
-   elif "netinfo" == command:
-     hostname, ip = get_net_info()
-     print(f"Hostname: {hostname}\nIP Address: {ip}")
-     
-   elif command.startswith("find"):
-      history.append(command)
-      parts = command.split()
-
-      if len(parts) < 2:
-         print("Usage: find [filename]")
-      
-      else:
-         search_name = parts[1]
-         found = False
-         print(f"Searching for '{search_name}'...")
-
-         for root, dirs, files in os.walk(os.getcwd()):
-                if search_name in files:
-                    print(f"Found at: {os.path.join(root, search_name)}")
-                    found = True
-            
-         if not found:
-                print("File not found.")
-
    elif command.startswith("copy"):
       command = command.split()
       shutil.copy(command[1],command[2])
@@ -180,11 +151,19 @@ def get_git_branch():
         return ""
     
     return ""
+
 while True:
-   current_path = os.getcwd()
-   if get_git_branch() =="":
-    command = input(current_path+"\my-shell> ")
-   else:
-    command = input(current_path+f"\my-shell({get_git_branch()})> ")
-   analyze_command(command)
+    current_path = os.getcwd()
+    if get_git_branch() == "":
+        command = input(current_path + r"\my-shell> ")
+    else:
+        command = input(current_path + rf"\my-shell({get_git_branch()})> ")
+
+    try:
+        analyze_command(command)
+    except KeyboardInterrupt:
+        print("\nCancelled.")
+    except Exception as e:
+        print(f"Error: {e}")
+
 
