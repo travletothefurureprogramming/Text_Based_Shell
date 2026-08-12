@@ -42,6 +42,8 @@ help = {
     "ping [host]": "Ping a host or website",
     "whoami": "Show current user",
     "view [file]": "View contents of a file",
+    "find [filename]": "Search for a file recursively",
+    "help": "Show this help menu",
     "Other Built In Windows/Unix Commands": "You can call native system commands",
     "exit/quit": "Close the shell"
 }
@@ -51,7 +53,7 @@ commands_list = [
     "cd", "pwd", "history", "dir", "cls", "mkdir", "rmdir", "del", 
     "touch", "explorer", "sysinfo", "codehere", "timer", "copy", 
     "move", "processes", "kill_process", "netinfo", "ping", "whoami", 
-    "view", "help", "exit", "quit"
+    "view", "find", "help", "exit", "quit"
 ]
 
 def completer(text, state):
@@ -63,6 +65,7 @@ def completer(text, state):
 
 if readline:
     readline.set_completer(completer)
+    readline.set_completer_delims(' \t\n;')
     # Handle auto-complete bindings across different platforms
     if platform.system() == 'Darwin':
         readline.parse_and_bind("bind ^I rl_complete")
@@ -208,6 +211,7 @@ def analyze_command(command: str):
         exit()
     else:
         try:
+            history.append(command)
             os.system(command)
         except Exception:
             print("Unknown Command")
