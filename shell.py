@@ -9,26 +9,29 @@ import socket
 os.chdir(os.path.expanduser('~'))
 history = []
 help = {
-   "cd [dir]":"Go to specific dir",
-   "cd":"Go to home dir",
-   "pwd":"Show the current dir",
-   "history":"Show the command history",
-   "dir":"Show files and folders in current dirs",
-   "cls":"Clear the terminal",
-   "mkdir [name]":"Create a new folder",
-   "rmdir [folder]":"Delete a folder",
-   "del [name]":"Delete a file",
-   "explorer":"Open the file explorer in current directory",
-   "sysinfo":"Show percentage for 1.CPU, 2.RAM, 3.Battery",
-   "codehere":"Open vs code in current dir",
-   "timer [total_seconds]": "The shel paused for x seconds and show the timer countdown",
-   "copy [src] [dst]": "Copy and paste a file",
-   "move [src] [dst]": "Move a file or folder to destination",
-   "processes": "Show current processes",
-   "kill_process [pid]": "Kills a process based to pid",
-   "netinfo":"It returns hostname and ip of the device",
-   "Other Built In Windows Commands":"You can call built-in windows commands",
-   "exit/quit":"Close the shell"
+    "cd [dir]": "Go to specific dir",
+    "cd": "Go to home dir",
+    "pwd": "Show the current dir",
+    "history": "Show the command history",
+    "dir": "Show files and folders in current dirs",
+    "cls": "Clear the terminal",
+    "mkdir [name]": "Create a new folder",
+    "rmdir [folder]": "Delete a folder",
+    "del [name]": "Delete a file",
+    "explorer": "Open the file explorer in current directory",
+    "sysinfo": "Show percentage for 1.CPU, 2.RAM, 3.Battery",
+    "codehere": "Open vs code in current dir",
+    "timer [total_seconds]": "The shell paused for x seconds and show the timer countdown",
+    "copy [src] [dst]": "Copy and paste a file",
+    "move [src] [dst]": "Move a file or folder to destination",
+    "processes": "Show current processes",
+    "kill_process [pid]": "Kills a process based to pid",
+    "netinfo": "It returns hostname and ip of the device",
+    "view [file]": "Read and print the contents of a text file directly to the console.",
+    "find [filename]": "Search for a file recursively in the current directory",
+    "help": "Show this help menu",
+    "Other Built In Windows Commands": "You can call built-in windows commands",
+    "exit/quit": "Close the shell"
 }
 
 def timer(total_seconds):
@@ -51,118 +54,122 @@ def timer(total_seconds):
 def get_net_info():
     hostname = socket.gethostname()
     ip = socket.gethostbyname(hostname)
-    return hostname,ip
+    return hostname, ip
 
+def analyze_command(command: str):
+    if command.startswith("cd"):
+        history.append(command)
+        if command == "cd":
+            os.chdir(os.path.expanduser('~'))
+        else:
+            command = command.split()
+            os.chdir(" ".join(command[1:]))
+    elif "pwd" == command:
+        history.append(command)
+        print(os.getcwd())
+    elif "history" == command:
+        history.append(command)
+        print(history)
+    elif "dir" == command:
+        history.append(command)
+        dir = os.listdir(os.getcwd())
+        for i in dir:
+            print(i)
+    elif "cls" == command:
+        history.append(command)
+        os.system('cls')
+    elif command.startswith("mkdir"):
+        history.append(command)
+        command = command.split()
+        os.mkdir(" ".join(command[1:]))
+    elif command.startswith("rmdir"):
+        history.append(command)
+        command = command.split()
+        os.rmdir(" ".join(command[1:]))
+    elif command.startswith("del"):
+        history.append(command)
+        command = command.split()
+        os.remove(" ".join(command[1:]))
+    elif command.startswith("explorer"):
+        history.append(command)
+        current_path = os.getcwd()
+        subprocess.run(["explorer", current_path])
+    elif "sysinfo" == command:
+        history.append(command)
+        cpu = psutil.cpu_percent()
+        ram = psutil.virtual_memory()
+        battery = psutil.sensors_battery()
+        
+        print(cpu, "%")
+        print(ram[2], "%")
+        if battery != None:
+            print(battery[0], "%")
+        else:
+            print("Battery: No battery detected (Desktop)")
+    elif "codehere" == command:
+        history.append(command)
+        os.system("code .")
+    elif "netinfo" == command:
+        history.append(command)
+        hostname, ip = get_net_info()
+        print(f"Hostname: {hostname}\nIP Address: {ip}")
+    elif command.startswith("find"):
+        history.append(command)
+        parts = command.split()
 
-def analyze_command(command:str):
-   
-   if command.startswith("cd"):
-      history.append(command)
-      if command == "cd":
-         os.chdir(os.path.expanduser('~'))
-      else:
-         command = command.split()
-         os.chdir(" ".join(command[1:]))
-   elif "pwd" == command:
-      history.append(command)
-      print(os.getcwd())
-   elif "history" == command:
-      history.append(command)
-      print(history)
-   elif "dir" == command:
-      history.append(command)
-      dir = os.listdir(os.getcwd())
-      for i in dir:
-       print(i)
-   elif "cls" == command:
-      history.append(command)
-      os.system('cls')
-   elif command.startswith("mkdir"):
-      history.append(command)
-      command = command.split()
-      os.mkdir(" ".join(command[1:]))
-   elif command.startswith("rmdir"):
-      history.append(command)
-      command = command.split()
-      os.rmdir(" ".join(command[1:]))
-   elif command.startswith("del"):
-      history.append(command)
-      command = command.split()
-      os.remove(" ".join(command[1:]))
-   elif command.startswith("explorer"):
-      history.append(command)
-      current_path = os.getcwd()
-      subprocess.run(["explorer",current_path])
-   elif "sysinfo" == command:
-      history.append(command)
-      cpu = psutil.cpu_percent()
-      ram = psutil.virtual_memory()
-      battery = psutil.sensors_battery()
-      
-      print(cpu,"%")
-      print(ram[2],"%")
-      if battery != None:
-       print(battery[0],"%")
-      else:
-         print("Battery: No battery detected (Desktop)")
-   elif "codehere" == command:
-      history.append(command)
-      os.system("code .")
-   elif "netinfo" == command:
-     hostname, ip = get_net_info()
-     print(f"Hostname: {hostname}\nIP Address: {ip}")
-     
-   elif command.startswith("find"):
-      history.append(command)
-      parts = command.split()
+        if len(parts) < 2:
+            print("Usage: find [filename]")
+        else:
+            search_name = parts[1]
+            found = False
+            print(f"Searching for '{search_name}'...")
 
-      if len(parts) < 2:
-         print("Usage: find [filename]")
-      
-      else:
-         search_name = parts[1]
-         found = False
-         print(f"Searching for '{search_name}'...")
-
-         for root, dirs, files in os.walk(os.getcwd()):
+            for root, dirs, files in os.walk(os.getcwd()):
                 if search_name in files:
                     print(f"Found at: {os.path.join(root, search_name)}")
                     found = True
             
-         if not found:
+            if not found:
                 print("File not found.")
-
-   elif command.startswith("copy"):
-      command = command.split()
-      shutil.copy(command[1],command[2])
-   elif command.startswith("move"):
-      command = command.split()
-      shutil.move(command[1],command[2])
-   elif "processes" == command:
-      for p in psutil.process_iter():
-        print(p.pid, p.name())
-   elif command.startswith("kill_process"):
-      pid = command[1]
-      psutil.Process(int(pid)).kill()
-   elif command.startswith("view"):
-      command = command.split()
-      file = command[1]
-      with open(file) as f:
-         print(f.read())
-   elif "help" == command:
-      history.append(command)
-      for i in help:
-         print(f"Command {i}. Description: {help[i]}")
-   elif command.startswith("timer"):
-      command = command.split()
-      timer(int(command[1]))
-   elif "exit" == command or "quit" == command:
-      exit()
-   else:
-     try:
-      os.system(command)
-     except:
-        print("Uknown Command")
+    elif command.startswith("copy"):
+        history.append(command)
+        command = command.split()
+        shutil.copy(command[1], command[2])
+    elif command.startswith("move"):
+        history.append(command)
+        command = command.split()
+        shutil.move(command[1], command[2])
+    elif "processes" == command:
+        history.append(command)
+        for p in psutil.process_iter():
+            print(p.pid, p.name())
+    elif command.startswith("kill_process"):
+        history.append(command)
+        command = command.split()
+        pid = command[1]
+        psutil.Process(int(pid)).kill()
+    elif command.startswith("view"):
+        history.append(command)
+        command = command.split()
+        file = command[1]
+        with open(file) as f:
+            print(f.read())
+    elif "help" == command:
+        history.append(command)
+        for i in help:
+            print(f"Command: {i} | Description: {help[i]}")
+    elif command.startswith("timer"):
+        history.append(command)
+        command = command.split()
+        timer(int(command[1]))
+    elif "exit" == command or "quit" == command:
+        exit()
+    else:
+        try:
+            history.append(command)
+            os.system(command)
+        except:
+            print("Unknown Command")
 
 def get_git_branch():
     try:
@@ -170,7 +177,7 @@ def get_git_branch():
             ["git", "branch", "--show-current"], 
             stdout=subprocess.PIPE,  
             stderr=subprocess.DEVNULL, 
-            text=True                 
+            text=True                
         )
         
         if result.stdout:
@@ -180,11 +187,11 @@ def get_git_branch():
         return ""
     
     return ""
-while True:
-   current_path = os.getcwd()
-   if get_git_branch() =="":
-    command = input(current_path+"\my-shell> ")
-   else:
-    command = input(current_path+f"\my-shell({get_git_branch()})> ")
-   analyze_command(command)
 
+while True:
+    current_path = os.getcwd()
+    if get_git_branch() == "":
+        command = input(current_path + "\\my-shell> ")
+    else:
+        command = input(current_path + f"\\my-shell({get_git_branch()})> ")
+    analyze_command(command)
